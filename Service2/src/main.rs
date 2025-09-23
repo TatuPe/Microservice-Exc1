@@ -1,6 +1,7 @@
 use axum::{routing::get, Router};
 use sysinfo::{Disks, System};
 use std::{env};
+use chrono::prelude::*;
 
 fn get_port() -> i32 {
     let port = match env::var("PORT").map(|port| port.parse::<i32>()) {
@@ -28,6 +29,7 @@ async fn get_status() -> String {
     // Reports uptime in seconds, divide to hours
     // Note: Reports system uptime, which in Docker equals to app uptime.
     let uptime = System::uptime() / 3600;
+    let timestamp = Utc::now().format("%Y-%m-%dT%H:%M:%S.%3fZ");
 
     let disks = Disks::new_with_refreshed_list();
     let mut space= 0;
@@ -39,5 +41,5 @@ async fn get_status() -> String {
         }
     }
     
-    format!("Timestamp2: uptime {} hours, free disk in root: {} Mbytes", uptime, space)
+    format!("{}: uptime {} hours, free disk in root: {} Mbytes", timestamp, uptime, space)
 }

@@ -28,8 +28,12 @@ app.get("/status", async (req, res) => {
     });
 
     const response = await fetch('http://service2:3001/status');
+    const timestamp = new Date();
 
-    let status = "Timestamp1: uptime " + (process.uptime()/3600) + " hours, free disk in root: " + free_space + " Mbytes"
+    let status = timestamp.toISOString() 
+                  + ": uptime " + (process.uptime()/3600).toFixed(0) 
+                  + " hours, free disk in root: " + free_space.toFixed(0) + " Mbytes"
+
     res.type('text');
     res.status(200).send(status + "\n" + await response.text());
   }
