@@ -1,0 +1,22 @@
+# Service configuration
+services:
+  service1:
+    build: ./Service1
+    environment:
+      - PORT=${SVC1_PORT}
+    ports:
+      - "${SVC1_PORT}:${SVC1_PORT}"
+    networks:
+      - internal
+
+  service2:
+    build: ./Service2
+    environment:
+      - PORT=${SVC2_PORT}
+    networks:
+      - internal
+
+# Network configuration
+networks:
+  internal:
+    driver: bridge

@@ -1,0 +1,17 @@
+{
+  "name": "service1",
+  "version": "1.0.0",
+  "description": "Microservice exercise Service 1",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tatu Pesonen",
+  "license": "ISC",
+  "dependencies": {
+    "esm": "^3.2.25",
+    "express": "^5.1.0",
+    "node-fetch": "^2.7.0"
+  }
+}
