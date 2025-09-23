@@ -1,5 +1,10 @@
-const express = require('express');
-const fetch = require('node-fetch');
+import { statfs } from 'fs';
+import express from 'express'
+import fetch from 'node-fetch'
+
+//const express = require('express');
+//const fetch = require('node-fetch');
+
 
 const app = express();
 //const port = process.env.PORT;
@@ -12,10 +17,21 @@ app.get("/log", async (req, res) => {
 
 app.get("/status", async (req, res) => {
   console.log("GET status");
+  let free_space;
 
   try {
+    const space = statfs('/', (err, stats) => {
+      if (err) {
+        throw err
+      }
+      free_space = (stats.bsize*stats.bfree)/1000000
+    });
+
     const response = await fetch('http://service2:3001/status');
-    res.status(200).send(await response.text());
+
+    let status = "Timestamp1: uptime " + (process.uptime()/3600) + " hours, free disk in root: " + free_space + " Mbytes"
+    res.type('text');
+    res.status(200).send(status + "\n" + await response.text());
   }
   catch (e) {
     console.log(e);
