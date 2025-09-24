@@ -1,4 +1,4 @@
-import { statfs, readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, statfsSync } from 'fs';
 import express from 'express'
 import fetch from 'node-fetch'
 
@@ -21,21 +21,14 @@ app.get("/status", async (req, res) => {
 
   // Get free space
   try {
-    const space = statfs('/', (err, stats) => {
-      if (err) {
-        throw err
-      }
-      free_space = (stats.bsize*stats.bfree)/1000000
-    });
-
-    // Get status from service 2
-    const response = await fetch('http://service2:3001/status');
+    let stats = statfsSync('/');
+    free_space = ((stats.bsize*stats.bfree)/1000000).toFixed(0)
 
     // Create status string
     const timestamp = new Date();
     let status = timestamp.toISOString() 
                   + ": uptime " + (process.uptime()/3600).toFixed(0) 
-                  + " hours, free disk in root: " + free_space.toFixed(0) + " Mbytes"
+                  + " hours, free disk in root: " + free_space + " Mbytes"
 
     // Write status to file
     const file = readFileSync(VSTORAGE, function(err) {
@@ -46,11 +39,18 @@ app.get("/status", async (req, res) => {
     writeFileSync(VSTORAGE, file + status + "\n", function(err) {
     if(err) {
         console.log(err);
-    }});
+    }
+    else{
+      console.log("vStorage write success!");
+    }
+    });
 
     // POST Status to storage
     const post = await fetch('http://storage:3002/log', {method: 'POST', body: status});
     console.log("Storage: " + await post.text());
+
+    // Get status from service 2
+    const response = await fetch('http://service2:3001/status');
 
     // Create response
     res.type('text');
