@@ -8,6 +8,8 @@ services:
       - "${SVC1_PORT}:${SVC1_PORT}"
     networks:
       - internal
+    volumes:
+      - "${PWD}/vstorage:/vstorage:rw" # Will not work if filepath contains spaces
 
   service2:
     build: ./Service2
@@ -15,6 +17,8 @@ services:
       - PORT=${SVC2_PORT}
     networks:
       - internal
+    volumes:
+      - "${PWD}/vstorage:/vstorage:rw" # Will not work if filepath contains spaces
 
   storage:
     build: ./Storage
@@ -28,7 +32,6 @@ services:
 # Network configuration
 networks:
   internal:
-    driver: bridge
 
 # Persistent storage
 volumes:

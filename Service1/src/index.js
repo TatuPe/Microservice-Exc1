@@ -1,10 +1,8 @@
-import { statfs } from 'fs';
+import { statfs, readFileSync, writeFileSync } from 'fs';
 import express from 'express'
 import fetch from 'node-fetch'
 
-//const express = require('express');
-//const fetch = require('node-fetch');
-
+const VSTORAGE = "/vstorage"; 
 
 const app = express();
 //const port = process.env.PORT;
@@ -38,6 +36,17 @@ app.get("/status", async (req, res) => {
     let status = timestamp.toISOString() 
                   + ": uptime " + (process.uptime()/3600).toFixed(0) 
                   + " hours, free disk in root: " + free_space.toFixed(0) + " Mbytes"
+
+    // Write status to file
+    const file = readFileSync(VSTORAGE, function(err) {
+    if(err) {
+        console.log(err);
+    }}).toString();
+    
+    writeFileSync(VSTORAGE, file + status + "\n", function(err) {
+    if(err) {
+        console.log(err);
+    }});
 
     // POST Status to storage
     const post = await fetch('http://storage:3002/log', {method: 'POST', body: status});

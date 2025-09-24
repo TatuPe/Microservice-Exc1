@@ -2,6 +2,9 @@ use axum::{routing::get, Router};
 use sysinfo::{Disks, System};
 use std::{env};
 use chrono::prelude::*;
+use tokio::fs;
+
+const VSTORAGE: &str = "/vstorage";
 
 fn get_port() -> i32 {
     let port = match env::var("PORT").map(|port| port.parse::<i32>()) {
@@ -44,6 +47,8 @@ async fn get_status() -> String {
     
     let status = format!("{}: uptime {} hours, free disk in root: {} Mbytes", timestamp, uptime, space);
 
+    write_vstorage(status.clone()).await;
+
     let client = reqwest::Client::new();
     let res = client.post("http://storage:3002/log")
                     .body(status.clone())
@@ -56,4 +61,18 @@ async fn get_status() -> String {
     }
     
     return status;
+}
+
+async fn write_vstorage(status: String) {
+    let f: String = match fs::read_to_string(VSTORAGE).await {
+                            Ok(file) => file,
+                            Err(_) => "".to_string()
+                        };
+
+    let log = format!("{}{}\n", f, status);
+
+    match fs::write(VSTORAGE, log).await {
+        Ok(_) => println!("vStorage write success!"),
+        Err(e) => println!("vStorage error: {} {}", VSTORAGE, e)
+    };
 }
