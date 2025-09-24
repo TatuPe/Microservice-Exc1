@@ -16,6 +16,13 @@ services:
     networks:
       - internal
 
+  storage:
+    build: ./Storage
+    environment:
+      - PORT=${STR_PORT}
+    networks:
+      - internal
+
 # Network configuration
 networks:
   internal:
