@@ -2,7 +2,7 @@ use axum::{routing::{get, post}, Router};
 use tokio::fs;
 use std::{env};
 
-const LOGFILE: &str = "log.txt";
+const LOGFILE: &str = "/data/log.txt";
 
 fn get_port() -> i32 {
     let port = match env::var("PORT").map(|port| port.parse::<i32>()) {

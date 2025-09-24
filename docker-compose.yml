@@ -22,8 +22,14 @@ services:
       - PORT=${STR_PORT}
     networks:
       - internal
+    volumes:
+      - storage:/data
 
 # Network configuration
 networks:
   internal:
     driver: bridge
+
+# Persistent storage
+volumes:
+  storage:
