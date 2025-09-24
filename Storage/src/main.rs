@@ -27,7 +27,7 @@ async fn main() {
 }
 
 async fn get_log() -> String {
-    print!("GET log");
+    println!("GET log");
     let f: String = match fs::read_to_string(LOGFILE).await {
                             Ok(file) => file,
                             Err(e) => return format!("Could not open log!\n{}", e)
@@ -37,7 +37,7 @@ async fn get_log() -> String {
 }
 
 async fn post_log(req: String) -> String {
-    print!("POST log");
+    println!("POST log");
     let f: String = match fs::read_to_string(LOGFILE).await {
                             Ok(file) => file,
                             Err(_) => "".to_string()

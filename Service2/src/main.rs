@@ -25,6 +25,7 @@ async fn main() {
 }
 
 async fn get_status() -> String {
+    println!("GET status");
 
     // Reports uptime in seconds, divide to hours
     // Note: Reports system uptime, which in Docker equals to app uptime.
@@ -41,5 +42,18 @@ async fn get_status() -> String {
         }
     }
     
-    format!("{}: uptime {} hours, free disk in root: {} Mbytes", timestamp, uptime, space)
+    let status = format!("{}: uptime {} hours, free disk in root: {} Mbytes", timestamp, uptime, space);
+
+    let client = reqwest::Client::new();
+    let res = client.post("http://storage:3002/log")
+                    .body(status.clone())
+                    .send()
+                    .await;
+
+    match res {
+        Ok(res) => println!("{}", res.text().await.unwrap()),
+        Err(e) => println!("{}", e)
+    }
+    
+    return status;
 }
