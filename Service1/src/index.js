@@ -5,8 +5,7 @@ import fetch from 'node-fetch'
 const VSTORAGE = "/vstorage"; 
 
 const app = express();
-//const port = process.env.PORT;
-const port = "3000";
+const port = process.env.PORT;
 
 app.get("/log", async (req, res) => {
   console.log("GET log");
