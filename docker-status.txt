@@ -1,0 +1,10 @@
+CONTAINER ID   IMAGE                        COMMAND                  CREATED          STATUS          PORTS                    NAMES
+fda1d9769295   microservice-exc1-service1   "docker-entrypoint.s…"   28 seconds ago   Up 26 seconds   0.0.0.0:8199->8199/tcp   microservice-exc1-service1-1
+02a23b6c54a1   microservice-exc1-service2   "cargo run"              28 seconds ago   Up 26 seconds                            microservice-exc1-service2-1
+8b535c80b5df   microservice-exc1-storage    "cargo run"              28 seconds ago   Up 26 seconds                            microservice-exc1-storage-1
+
+NETWORK ID     NAME                         DRIVER    SCOPE
+d6a1f8a84b6c   bridge                       bridge    local
+38c1c829c83d   host                         host      local
+c741be914583   microservice-exc1_internal   bridge    local
+f201242e53ba   none                         null      local
